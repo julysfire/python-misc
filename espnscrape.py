@@ -11,28 +11,7 @@ import pandas as pd
 #except ImportError:
 #    print("Failed to install requests and pandas")
 
-#Current year
-year = date.today().year
-if date.today().month > 0 and date.today().month < 9:
-    year = year - 1
-
-#Location input
-location = input("Enter a path to where you would like to save the CSV file: ")
-if location[len(location)-1] != "\\":
-    location = location + "\\"
-
-#Date range input
-toDate = input("Enter the date you would like to scrape to (x - Current Year, 2003 was the earliest): ")
-if toDate.isdigit():
-    toDate = int(toDate)
-    if toDate < 2003 or toDate > year:
-        print("Invalid year input.")
-        exit()
-else:
-    print("Invalid year input.")
-    exit()
-
-def scapeESPNYear(year):
+def scrapeESPNYear(year):
     #Tables
     tbleTitles = []
     tble = []
@@ -126,16 +105,37 @@ def scapeESPNYear(year):
         statTble[i].insert(len(statTble[i]),str(year))
     return statTble
 
+#Inputs
+    #Get current year
+year = date.today().year
+if date.today().month > 0 and date.today().month < 9:
+    year = year - 1
 
+    #Location input
+location = input("Enter a path to where you would like to save the CSV file: ")
+if location[len(location)-1] != "\\":
+    location = location + "\\"
+
+    #Date range input
+toDate = input("Enter the date you would like to scrape to (x - Current Year, 2003 was the earliest): ")
+if toDate.isdigit():
+    toDate = int(toDate)
+    if toDate < 2003 or toDate > year:
+        print("Invalid year input.")
+        exit()
+else:
+    print("Invalid year input.")
+    exit()
+
+#Pandas Dataframe
 df = pd.DataFrame(columns=["Team","Conference","Conference Win","Conference Loss","Conference PF","Conference PA","Overall Win","Overall Loss","Overall PF", "Overall PA","Streak","Year"])
 
 #Main loop through each year
 while year >= toDate:
-    x = scapeESPNYear(year)
+    x = scrapeESPNYear(year)
     year = year - 1
     df2 = pd.DataFrame(data=x,columns=["Team", "Conference", "Conference Win", "Conference Loss", "Conference PF", "Conference PA", "Overall Win", "Overall Loss", "Overall PF", "Overall PA", "Streak", "Year"])
     df = df.append(df2,ignore_index=True)
-
 
 #Pandas
 pd.set_option("display.max_colwidth",-1)
