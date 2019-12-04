@@ -1,15 +1,36 @@
 #import pip._internal.main
+from datetime import date
+from sys import exit
 
 #pip._internal.main(['install','requests'])
 #pip._internal.main(['install','pandas'])
 
 #try:
-    import requests
-    import pandas as pd
+import requests
+import pandas as pd
 #except ImportError:
 #    print("Failed to install requests and pandas")
 
-year = 2019
+#Current year
+year = date.today().year
+if date.today().month > 0 and date.today().month < 9:
+    year = year - 1
+
+#Location input
+location = input("Enter a path to where you would like to save the CSV file: ")
+if location[len(location)-1] != "\\":
+    location = location + "\\"
+
+#Date range input
+toDate = input("Enter the date you would like to scrape to (x - Current Year, 2003 was the earliest): ")
+if toDate.isdigit():
+    toDate = int(toDate)
+    if toDate < 2003 or toDate > year:
+        print("Invalid year input.")
+        exit()
+else:
+    print("Invalid year input.")
+    exit()
 
 def scapeESPNYear(year):
     #Tables
@@ -108,14 +129,8 @@ def scapeESPNYear(year):
 
 df = pd.DataFrame(columns=["Team","Conference","Conference Win","Conference Loss","Conference PF","Conference PA","Overall Win","Overall Loss","Overall PF", "Overall PA","Streak","Year"])
 
-#
-#
-#
-#CHANGE THIS YEAR TO THE YEAR-1 YOU WANT TO GO TO
-#
-#
-#
-while year > 2009:
+#Main loop through each year
+while year >= toDate:
     x = scapeESPNYear(year)
     year = year - 1
     df2 = pd.DataFrame(data=x,columns=["Team", "Conference", "Conference Win", "Conference Loss", "Conference PF", "Conference PA", "Overall Win", "Overall Loss", "Overall PF", "Overall PA", "Streak", "Year"])
@@ -127,15 +142,4 @@ pd.set_option("display.max_colwidth",-1)
 pd.set_option("display.max_rows",999)
 print(df.to_string)
 
-#CHANGE THIS FILE LOCATION
-#
-#
-#
-#
-export_csv = df.to_csv(r'C:\Users\Austin\Desktop\espnscrape.csv',index = None, header=True)
-#
-#
-#
-#
-#CHANGE THIS FILE LOCATION
-
+export_csv = df.to_csv(location + 'espnscrape.csv',index = None, header=True)
