@@ -25,10 +25,7 @@ def scrapeESPNYear(year):
     confHolder = 0
 
     print("Year: " + str(year))
-    if year == 2019:
-        y = requests.get("https://www.espn.com/college-football/standings/_/view/fcs").text
-    else:
-        y = requests.get("https://www.espn.com/college-football/standings/_/season/"+str(year)+"/view/fcs").text
+    y = requests.get("https://www.espn.com/college-football/standings/_/season/"+str(year)+"/view/fcs").text
 
     #Main loop
     while looper:
