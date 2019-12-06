@@ -1,15 +1,16 @@
-#import pip._internal.main
 from datetime import date
 from sys import exit
 
-#pip._internal.main(['install','requests'])
-#pip._internal.main(['install','pandas'])
+import os
 
-#try:
-import requests
-import pandas as pd
-#except ImportError:
-#    print("Failed to install requests and pandas")
+try:
+    import requests
+    import pandas as pd
+except ImportError:
+    os.system('pip install pandas')
+    os.system('pip install requests')
+    import requests
+    import pandas as pd
 
 def scrapeESPNYear(year):
     #Tables
