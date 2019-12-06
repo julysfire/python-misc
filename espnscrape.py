@@ -7,6 +7,7 @@ try:
     import requests
     import pandas as pd
 except ImportError:
+    os.system('pip install numpy')
     os.system('pip install pandas')
     os.system('pip install requests')
     import requests
