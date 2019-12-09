@@ -122,8 +122,8 @@ def getChecked():
         if saveLocation.get()[len(saveLocation.get())-1] != "\\":
             saveLocation.set(saveLocation.get() + "\\")
             if os.path.isdir(saveLocation.get()) == False:
-                print("Path entered does not exist.")
-                exit()
+                messagebox.showinfo("File path invalid", "The entered file path does not exist.  Please enter a path that exists.")
+                return
 
         if indSelect.get():
             indeedScraper()
