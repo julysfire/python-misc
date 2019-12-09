@@ -114,6 +114,9 @@ if date.today().month > 0 and date.today().month < 9:
 location = input("Enter a path to where you would like to save the CSV file: ")
 if location[len(location)-1] != "\\":
     location = location + "\\"
+if os.path.isdir(location) == False:
+    print("Path entered does not exist.")
+    exit()
 
     #Date range input
 toDate = input("Enter the date you would like to scrape to (x - Current Year, 2003 was the earliest): ")
