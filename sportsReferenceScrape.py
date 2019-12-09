@@ -107,7 +107,7 @@ if os.path.isdir(location) == False:
 
 toDate = input("Please enter the year of the date your wish to scrape to (2019- ): ")
 toDate = int(toDate)
-if toDate < 1970:
+if toDate < 1870:
     print("Unable to go back further then that.")
     exit()
 
