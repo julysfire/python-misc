@@ -121,6 +121,9 @@ def getChecked():
         #Add \ if needed
         if saveLocation.get()[len(saveLocation.get())-1] != "\\":
             saveLocation.set(saveLocation.get() + "\\")
+            if os.path.isdir(saveLocation.get()) == False:
+                print("Path entered does not exist.")
+                exit()
 
         if indSelect.get():
             indeedScraper()
