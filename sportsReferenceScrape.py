@@ -11,6 +11,7 @@ except ImportError:
     import requests
     import pandas as pd
 
+#Main loop funciton
 def scrapeSchedule(year):
     print("Year: " + str(year))
     #Variables
@@ -105,6 +106,7 @@ if os.path.isdir(location) == False:
     print("Path entered does not exist.")
     exit()
 
+#Get year input from user, not before 1870
 toDate = input("Please enter the year of the date your wish to scrape to (2019- ): ")
 toDate = int(toDate)
 if toDate < 1870:
