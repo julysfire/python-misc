@@ -26,6 +26,7 @@ def scrapeESPNYear(year):
     addCounter = placeCounter = cHolder = divFinder = 0
     confHolder = 0
 
+    #Output loop and get espn link
     print("Year: " + str(year))
     y = requests.get("https://www.espn.com/college-football/standings/_/season/"+str(year)+"/view/fcs").text
 
