@@ -1,0 +1,65 @@
+Most efficient way to do lots of if-elif statements?
+
+Sometimes I use a dictionary and dict.get for this kind of stuff.
+
+OPTIONS = {
+    "1": whatever,
+    "2": whatever2,
+    "3": whatever3,
+}
+
+choice = input("number.. ")
+selection = OPTIONS.get(choice)
+
+if selection == None:
+    print("Try again")
+    
+    
+    
+    5 Interesting Python Modules
+These are some modules that might not have day-to-day use for Python programmers but are still fun to try out and experiment with. Here are the modules:
+
+Wikipedia - It turns out that you can import the whole Wikipedia into your Python Program! Simply run pip install wikipedia on your computer and import the module. There are multiple functions in the module such as summary(), search(), set_lang() which can be used to create multiple interesting projects. More info at https://pypi.org/project/wikipedia/
+Emoji - This is a cool module that you can use to add emojis to your project. The emojis will be displayed in the command line for your project. To install it, run pip install emoji. More info at https://pypi.org/project/emoji/
+Turtle - This is one of the most well-known interesting Python modules. It comes pre-installed with the default Python3 package. Import turtle for graphics and simple 2d games. This is a module primarily used for creating graphics and cool visuals. More info at https://docs.python.org/3.3/library/turtle.html?highlight=turtle
+PyDictionary - This is a module containing the whole English dictionary! It can be used to find the definition, synonym, antonyms, and translations of words. To install it, run pip install PyDictionary. More info at https://pypi.org/project/PyDictionary/
+Arrow - This is an interesting module used for advanced functions with date and time. This is the more advanced version of the dateandtime module that is built into Python. You need to run pip install -U arrow. More info at https://pypi.org/project/arrow/.
+
+
+
+Visual Studio and Python -- Extensions and helpful
+
+When you're starting out like me learning Python, these are the 12 recommended extensions that I currently have installed. I hope it helps you in your learning journey as it is doing wonders for me:
+
+Bracket Pair Colorizer
+indent-rainbow
+Python
+Python Docstring Generator
+Python Preview
+Trailing Spaces
+Visual Studio Intellicode
+Gitlens
+Docker
+Dracula Theme
+Material Icon Theme
+Settings Sync
+
+Let me know if you have other cool extensions that I can add.
+
+Thanks!
+
+Edit:
+
+Added: Gitlens (for those already learned git/github), Docker (only install if you learned Docker), Material Icon Theme, Settings Sync, Dracula Theme
+
+Considerations:
+Themes: Monokai Pro (very cool, I tried it), Material (most popular)
+Code-Assistant/Auto-Complete: Kite, TabNine
+Webdev: Minify, Prettier, Paste JSON as Code (for those learning html, css and js)
+Removed: vscode-icons (sorry microsoft), Code Spell Checker (confusing with other syntax errors)
+
+
+
+A small collection of snippets that I use quite frequently. Feel free to use them for whatever you want. Go crazy!
+
+Lonk: https://recycledrobot.co.uk/words/?handy_python_functions
