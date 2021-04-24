@@ -1,19 +1,21 @@
-from datetime import date
-from sys import exit
-
 import os
+import time
+from datetime import datetime
+
+start_time = time.time()
 
 try:
     import requests
     import pandas as pd
 except ImportError:
-    os.system('pip install numpy')
     os.system('pip install pandas')
     os.system('pip install requests')
     import requests
     import pandas as pd
 
-def scrapeESPNYear(year):
+year = datetime.today().year
+
+def scapeESPNYear(year):
     #Tables
     tbleTitles = []
     tble = []
@@ -26,9 +28,11 @@ def scrapeESPNYear(year):
     addCounter = placeCounter = cHolder = divFinder = 0
     confHolder = 0
 
-    #Output loop and get espn link
     print("Year: " + str(year))
-    y = requests.get("https://www.espn.com/college-football/standings/_/season/"+str(year)+"/view/fcs").text
+    if year == datetime.today().year-1:
+        y = requests.get("https://www.espn.com/college-football/standings/_/view/fcs-i-aa").text
+    else:
+        y = requests.get("https://www.espn.com/college-football/standings/_/season/"+str(year)+"/view/fcs-i-aa").text
 
     #Main loop
     while looper:
@@ -105,44 +109,19 @@ def scrapeESPNYear(year):
         statTble[i].insert(len(statTble[i]),str(year))
     return statTble
 
-#Inputs
-    #Get current year
-year = date.today().year
-if date.today().month > 0 and date.today().month < 9:
-    year = year - 1
+if __name__ == "__main__":
+    df = pd.DataFrame(columns=["Team","Conference","Conference Win","Conference Loss","Conference PF","Conference PA","Overall Win","Overall Loss","Overall PF", "Overall PA","Streak","Year"])
 
-    #Location input
-location = input("Enter a path to where you would like to save the CSV file: ")
-if location[len(location)-1] != "\\":
-    location = location + "\\"
-if os.path.isdir(location) == False:
-    print("Path entered does not exist.")
-    exit()
+    while year > 2009:
+        x = scapeESPNYear(year)
+        year = year - 1
+        df2 = pd.DataFrame(data=x,columns=["Team", "Conference", "Conference Win", "Conference Loss", "Conference PF", "Conference PA", "Overall Win", "Overall Loss", "Overall PF", "Overall PA", "Streak", "Year"])
+        df = df.append(df2,ignore_index=True)
 
-    #Date range input
-toDate = input("Enter the date you would like to scrape to (x - Current Year, 2003 was the earliest): ")
-if toDate.isdigit():
-    toDate = int(toDate)
-    if toDate < 2003 or toDate > year:
-        print("Invalid year input.")
-        exit()
-else:
-    print("Invalid year input.")
-    exit()
+    #Pandas
+    pd.set_option("display.max_colwidth",-1)
+    pd.set_option("display.max_rows",999)
+    print(df.to_string)
 
-#Pandas Dataframe
-df = pd.DataFrame(columns=["Team","Conference","Conference Win","Conference Loss","Conference PF","Conference PA","Overall Win","Overall Loss","Overall PF", "Overall PA","Streak","Year"])
-
-#Main loop through each year
-while year >= toDate:
-    x = scrapeESPNYear(year)
-    year = year - 1
-    df2 = pd.DataFrame(data=x,columns=["Team", "Conference", "Conference Win", "Conference Loss", "Conference PF", "Conference PA", "Overall Win", "Overall Loss", "Overall PF", "Overall PA", "Streak", "Year"])
-    df = df.append(df2,ignore_index=True)
-
-#Pandas
-pd.set_option("display.max_colwidth",-1)
-pd.set_option("display.max_rows",999)
-print(df.to_string)
-
-export_csv = df.to_csv(location + 'espnscrape.csv',index = None, header=True)
+    export_csv = df.to_csv(os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')+'\espnscrape.csv',index = None, header=True)
+    print("Execution time in seconds: " + str(time.time() - start_time))
