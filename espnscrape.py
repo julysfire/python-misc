@@ -2,8 +2,10 @@ import os
 import time
 from datetime import datetime
 
+#Get start time for calculating total execution time
 start_time = time.time()
 
+#Try to import libraries, if not, install them
 try:
     import requests
     import pandas as pd
@@ -13,52 +15,50 @@ except ImportError:
     import requests
     import pandas as pd
 
-year = datetime.today().year
-
-def scapeESPNYear(year):
+def scapeESPNYear(year, league):
     #Tables
     tbleTitles = []
     tble = []
     statTble = [[]]
-    tempArray = ["","","","","","","","",""]
+    tempArray = ["", "", "", "", "", "", "", "", ""]
 
     #Extra variables for finding text
     looper = True
     x = statFind = altFind = 1
-    addCounter = placeCounter = cHolder = divFinder = 0
-    confHolder = 0
+    addCounter = placeCounter = divFinder = confHolder = 0
 
+    #Current year has a different URL then prior seasons
     print("Year: " + str(year))
     if year == datetime.today().year-1:
-        y = requests.get("https://www.espn.com/college-football/standings/_/view/fcs-i-aa").text
+        y = requests.get("https://www.espn.com/college-football/standings/_/"+league).text
     else:
-        y = requests.get("https://www.espn.com/college-football/standings/_/season/"+str(year)+"/view/fcs-i-aa").text
+        y = requests.get("https://www.espn.com/college-football/standings/_/season/"+str(year)+"/"+league).text
 
     #Main loop
     while looper:
-        x = y.find("Table__Title",x+1,len(y))
+        x = y.find("Table__Title", x+1, len(y))
 
         if x > 0:
             #Table titles
-            tbleTitles.append(y[x+14:y.find("</div>",x+1,len(y))])
-            x=x+20
+            tbleTitles.append(y[x+14:y.find("</div>", x+1, len(y))])
+            x = x+20
             confHolder = len(statTble)
 
             #Stat-cell is for the stats, alt-find is for finding the team names
             #When altFind > statFind, end of the teams listed for the given table
-            statFind = y.find("stat-cell",x,len(y))
+            statFind = y.find("stat-cell", x, len(y))
             altFind = x
 
             while altFind < statFind:
-                altFind = y.find("alt=",altFind,len(y))
+                altFind = y.find("alt=", altFind, len(y))
 
                 #Found team name
                 if altFind < statFind:
-                    tble.append(y[altFind+5:y.find(" title=",altFind,len(y))-1])
+                    tble.append(y[altFind+5:y.find(" title=", altFind, len(y))-1])
 
                     #&amp;
                     if(tble[len(tble)-1].find("amp;")) > 0:
-                        tble[len(tble)-1] = tble[len(tble)-1].replace("&amp;","&")
+                        tble[len(tble)-1] = tble[len(tble)-1].replace("&amp;", "&")
                     #For later to allocate stats per team
                     addCounter = addCounter + 1
                     altFind = altFind + 5
@@ -67,21 +67,21 @@ def scapeESPNYear(year):
                     for i in range(addCounter*7):
                         #W/L needs to be split
                         if placeCounter == 0 or placeCounter == 4:
-                            midFinder = y[statFind+11:y.find("<",statFind,len(y))]
+                            midFinder = y[statFind+11:y.find("<", statFind, len(y))]
                             if midFinder == "--":
                                 tempArray[placeCounter] = "0"
                                 tempArray[placeCounter+1] = "0"
                             else:
-                                divFinder = midFinder.find("-",1,len(midFinder))
+                                divFinder = midFinder.find("-", 1, len(midFinder))
                                 tempArray[placeCounter] = midFinder[0:divFinder]
                                 tempArray[placeCounter+1] = midFinder[divFinder:len(midFinder)]
                             placeCounter = placeCounter + 2
                         #Otherwise throw it into the temp array
                         else:
-                            tempArray[placeCounter] = y[statFind+11:y.find("</span>",statFind,len(y))]
+                            tempArray[placeCounter] = y[statFind+11:y.find("</span>", statFind, len(y))]
                             placeCounter = placeCounter + 1
 
-                        statFind = y.find("stat-cell",(statFind+10),len(y))
+                        statFind = y.find("stat-cell", (statFind+10), len(y))
 
                         #For allocating stats per team
                         if placeCounter == 9:
@@ -96,32 +96,50 @@ def scapeESPNYear(year):
 
                             statTble.append(tempArray[:])
                     addCounter = 0
-                    statFind = y.find("stat-cell",x,len(y))
+                    statFind = y.find("stat-cell", x, len(y))
             for i in range(len(statTble)-confHolder):
-                statTble[confHolder+i].insert(0,tbleTitles[len(tbleTitles)-1])
+                statTble[confHolder+i].insert(0, tbleTitles[len(tbleTitles)-1])
         else:
             looper = False
 
     statTble.pop(0)
     #Add team names to array
     for i in range(len(tble)):
-        statTble[i].insert(0,tble[i])
-        statTble[i].insert(len(statTble[i]),str(year))
+        statTble[i].insert(0, tble[i])
+        statTble[i].insert(len(statTble[i]), str(year))
     return statTble
 
+
 if __name__ == "__main__":
-    df = pd.DataFrame(columns=["Team","Conference","Conference Win","Conference Loss","Conference PF","Conference PA","Overall Win","Overall Loss","Overall PF", "Overall PA","Streak","Year"])
+    leagues = ["", "view/fcs-i-aa", "view/d2", "view/d3"]
+    for i in leagues:
+        #New dataframe
+        df = pd.DataFrame(columns=["Team", "Conference", "Conference Win", "Conference Loss", "Conference PF", "Conference PA", "Overall Win", "Overall Loss", "Overall PF", "Overall PA", "Streak", "Year"])
 
-    while year > 2009:
-        x = scapeESPNYear(year)
-        year = year - 1
-        df2 = pd.DataFrame(data=x,columns=["Team", "Conference", "Conference Win", "Conference Loss", "Conference PF", "Conference PA", "Overall Win", "Overall Loss", "Overall PF", "Overall PA", "Streak", "Year"])
-        df = df.append(df2,ignore_index=True)
+        # Get current year
+        year = datetime.today().year
 
-    #Pandas
-    pd.set_option("display.max_colwidth",-1)
-    pd.set_option("display.max_rows",999)
-    print(df.to_string)
+        #Year loop for calling data
+        print("League: " + i)
+        while year > 2009:
+            x = scapeESPNYear(year, i)
+            year = year - 1
+            #Append year's data to new dataframe
+            df2 = pd.DataFrame(data=x, columns=["Team", "Conference", "Conference Win", "Conference Loss", "Conference PF", "Conference PA", "Overall Win", "Overall Loss", "Overall PF", "Overall PA", "Streak", "Year"])
+            #And put back in the master dataframe
+            df = df.append(df2, ignore_index=True)
 
-    export_csv = df.to_csv(os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')+'\espnscrape.csv',index = None, header=True)
-    print("Execution time in seconds: " + str(time.time() - start_time))
+        #Pandas
+        pd.set_option("display.max_colwidth", -1)
+        pd.set_option("display.max_rows", 999)
+        print(df.to_string)
+
+        #Export to CSV
+        export_csv = df.to_csv(os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')+'\\espnscrape_'+i[len(i)-2:len(i)]+'.csv', index=None, header=True)
+
+        #Drop dataframe for new scrape
+        df.drop(df.index, inplace=True)
+        df2.drop(df2.index, inplace=True)
+
+#Total runtime of script
+print("Execution time in seconds: " + str(time.time() - start_time))
