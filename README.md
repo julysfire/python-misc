@@ -24,3 +24,13 @@ Some helpful stuff I found on Reddit that I have to reach through.
 ### sportsReferenceScrape.py
 
 Similar to the ESPN scraper, scrapes Sports Reference for stats over time and outputs to a CSV file.
+
+## Regression Analysis
+
+### KNearestCarData
+
+Using the K Nearest Neighbors algorithim, predict the class of a car in the car.data dataset given a handful of different variables.
+
+### StudentDataRegression
+
+Using linear regression and the student data set, find the coefficients for different variables to find their overall effect on the prediction of the final class grade. 
