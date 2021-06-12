@@ -134,6 +134,27 @@ if __name__ == "__main__":
         pd.set_option("display.max_rows", 999)
         print(df.to_string)
 
+        #Standardize teams
+        #Many teams have changed their names so they need to be cleaned
+        df["Team"] = df["Team"].str.replace('" class="Image Logo Logo__sm', "")
+        df["Team"] = df["Team"].str.replace("&#x27;", "'")
+        df["Team"] = df["Team"].str.replace("Florida Intl Golden Panthers", "Florida International Panthers")
+        df["Team"] = df["Team"].str.replace("Mars Hill Lions", "Mars Hill Mountain Lions")
+        df["Team"] = df["Team"].str.replace("Notre Dame College Blue Falcons", "Notre Dame College Falcons")
+        df["Team"] = df["Team"].str.replace("Minnesota St-Moorhead Dragon", "Minnesota St-Moorhead Dragons")
+        df["Team"] = df["Team"].str.replace("Bridgewater (VA) Eagles", "Bridgewater College (VA) Eagles")
+        df["Team"] = df["Team"].str.replace("Bridgewater State Bears", "Bridgewater State (MA) Bears")
+        df["Team"] = df["Team"].str.replace("Colby White Mules", "Colby College White Mules")
+        df["Team"] = df["Team"].str.replace("Colby College Mules", "Colby College White Mules")
+        df["Team"] = df["Team"].str.replace("Shenandoah Hornets", "Shenandoah University Hornets")
+        df["Team"] = df["Team"].str.replace("St. Johns (MN) Johnnies", "St. John's (MN) Johnnies")
+        df["Team"] = df["Team"].str.replace("St Lawrence Saints", "St. Lawrence Saints")
+        df["Team"] = df["Team"].str.replace("Sul Ross State Lobos", "Sul Ross State University Lobos")
+        df["Team"] = df["Team"].str.replace("Washington (MO) Bears", "Washington-Missouri Bears")
+        df["Team"] = df["Team"].str.replace("Waynesburg Yellow Jackets", "Waynesburg University Yellow Jackets")
+        df["Team"] = df["Team"].str.replace("San José St Spartans", "San José State Spartans")
+        df["Team"] = df["Team"].str.replace("East Tennessee St. Buccaneers", "East Tennessee State Buccaneers")
+
         #Export to CSV
         export_csv = df.to_csv(os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')+'\\espnscrape_'+i[len(i)-2:len(i)]+'.csv', index=None, header=True)
 
