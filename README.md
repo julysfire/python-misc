@@ -25,6 +25,12 @@ Some helpful stuff I found on Reddit that I have to reach through.
 
 Similar to the ESPN scraper, scrapes Sports Reference for stats over time and outputs to a CSV file.
 
+## RS Wiki Prices
+
+### rs-profitableAlchs
+
+Using the latest prices, display a table of items that are profitable to buy from the G.E. and high alch.  Gives the limit of the item as well as profit per item.
+
 ## Regression Analysis
 
 ### KNearestCarData
