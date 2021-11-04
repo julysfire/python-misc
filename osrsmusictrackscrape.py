@@ -30,6 +30,6 @@ for i in tables:
 
             #Final result
             if rowArray[0] != "Name":
-                file.writelines(str(rowArray) + "\n")
-                #print(rowArray)
+                file.writelines(rowArray[0] + " - " + rowArray[1] + "\n")
+                print(rowArray)
 file.close()
