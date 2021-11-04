@@ -40,3 +40,7 @@ Using the K Nearest Neighbors algorithim, predict the class of a car in the car.
 ### StudentDataRegression
 
 Using linear regression and the student data set, find the coefficients for different variables to find their overall effect on the prediction of the final class grade. 
+
+### OSRSMusicTrackScrape
+
+Scrapes the OSRS wiki for the full list of music tracks in OSRS and the instructions for unlocking said track.
