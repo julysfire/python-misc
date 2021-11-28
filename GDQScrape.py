@@ -62,6 +62,7 @@ def scrapeFunction(page, year, event):
             xAmt = yDono.find(">", xAmt, len(yDono))
             donoString = yDono[xAmt+1:yDono.find("<", xAmt, len(yDono))]
             donoString = donoString.replace("$","")
+            donoString = donoString.replace(",","")
             donoArray.append(float(donoString))
 
             #Comment?
