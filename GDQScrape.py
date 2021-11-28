@@ -51,14 +51,18 @@ def scrapeFunction(page, year, event):
             date = date.strip()
             donoArray.append(date)
 
-            time = time[time.find('T', 0, len(time))+1:time.find('.', 0, len(time))]
             #Time
+            time = time[time.find('T', 0, len(time))+1:time.find('.', 0, len(time))]
+            if time.find("-") > 0:
+                time = time[:time.find("-")]
             donoArray.append(time)
 
             #Dono Amount
             xAmt = yDono.find('<a href="/tracker/donation/', 0, len(yDono)) + 28
             xAmt = yDono.find(">", xAmt, len(yDono))
-            donoArray.append(yDono[xAmt+1:yDono.find("<", xAmt, len(yDono))])
+            donoString = yDono[xAmt+1:yDono.find("<", xAmt, len(yDono))]
+            donoString = donoString.replace("$","")
+            donoArray.append(float(donoString))
 
             #Comment?
             xCmt = yDono.find('<td>', xAmt, len(yDono)) + 5
