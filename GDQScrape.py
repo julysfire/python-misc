@@ -36,7 +36,10 @@ def scrapeFunction(page, year, event):
             if yDono.find("/tracker/donor/", 0, len(yDono)) > 0:
                 xName = yDono.find("/tracker/donor/", 0, len(yDono))
                 xName = yDono.find(">", xName, len(yDono))
-                donoArray.append(yDono[xName+2:yDono.find("<", xName, len(yDono))-1])
+                stringName = yDono[xName+2:yDono.find("<", xName, len(yDono))-1]
+                stringName = stringName.replace(",", ";")
+                stringName = stringName.strip()
+                donoArray.append(stringName)
             else:
                 donoArray.append("Anonymous")
 
@@ -45,7 +48,7 @@ def scrapeFunction(page, year, event):
             time = yDono[xTime+1:yDono.find("<", xTime, len(yDono))-1]
             #Date
             date = time[0:time.find('T', 0, len(time))]
-            date.strip()
+            date = date.strip()
             donoArray.append(date)
 
             time = time[time.find('T', 0, len(time))+1:time.find('.', 0, len(time))]
@@ -104,6 +107,8 @@ if __name__ == "__main__":
     totalPages = y.find('<label for="sort">of')
     totalPages = y[totalPages+21:y.find("<", totalPages+1, len(y))]
 
+    print("Total Pages: " + str(totalPages))
+
     # Main Loop
     while pageCounter < int(totalPages):
         x = scrapeFunction(pageCounter, yearIn, eventIn)
@@ -114,4 +119,4 @@ if __name__ == "__main__":
 
     # Save out
     print(df.to_string)
-    export_csv = df.to_csv(location + "SGDQ2020.csv", index=None, header=True)
+    export_csv = df.to_csv(location + eventIn + yearIn + ".csv", index=None, header=True)
