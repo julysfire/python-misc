@@ -25,7 +25,7 @@ Some helpful stuff I found on Reddit that I have to reach through.
 
 Similar to the ESPN scraper, scrapes Sports Reference for stats over time and outputs to a CSV file.
 
-### EmptyFolderRemove
+### EmptyFolderRemove.py
 
 Takes a single input of a directory.  The directory will be looped through and any folders that do not have files in them will be deleted.
 
