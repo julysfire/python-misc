@@ -41,14 +41,5 @@ def cleanup(main_dir):
     print()
     print(str(totalSizeSaved*0.000001))
 
-    counter = 0
-
-    for dirpath, dirnames, filenames in os.walk(main_dir):
-        if not dirnames and not filenames:
-            os.rmdir(dirpath)
-            counter += 1
-
-    print(str(counter) + " empty folders removed.")
-
 if __name__ == '__main__':
     cleanup(sys.argv[1])
