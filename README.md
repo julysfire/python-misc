@@ -1,4 +1,4 @@
-# python-misc
+# Brief File Explainations
 Misc Python scripts that I've written.
 
 ### GDQScrape.py
