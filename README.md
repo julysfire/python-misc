@@ -35,6 +35,14 @@ Using the latest prices, display a table of items that are profitable to buy fro
 
 Scrapes the OSRS wiki for the full list of music tracks in OSRS and the instructions for unlocking said track.
 
+### EmptyFolderRemove
+
+Takes a single input of a directory.  The directory will be looped through and any folders that do not have files in them will be deleted.
+
+### dupefinder.py
+
+Takes a single input of the directory to be searched for duplicate files.  The files will be hashed and then checked for uniqueness.  Any duplicate files will be deleted.  Works for all sub folders within the directory given.  Great when paired with EmptyFolderRemove to delete sub directories that are empty.
+
 ## Regression Analysis
 
 ### KNearestCarData
