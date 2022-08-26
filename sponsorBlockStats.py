@@ -2,8 +2,8 @@
 #Required: publicUserId          This is your public user ID from SponsorBlock.
 #Required: fileSaveLocation      This is the location where you would like to save your CSV.
 #
-#Example: python sponsorBlockSats.py "publicUserId", "fileSaveLocation"
-#         python sponsorBlockStats.py "1234567890asdfghjkl", "C:\Users\JoeSmo\Desktop\"
+#Example: python sponsorBlockSats.py "publicUserId" "fileSaveLocation"
+#         python sponsorBlockStats.py "1234567890asdfghjkl" "C:\Users\JoeSmo\Desktop\"
 #
 
 #Writing to CSV
