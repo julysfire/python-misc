@@ -33,11 +33,11 @@ y = requests.get("https://sponsor.ajay.app/api/userInfo", params=params).json()
 #Get category information
 params = {"publicUserID": sys.argv[1], "fetchCategoryStats": "true"}
 x = requests.get("https://sponsor.ajay.app/api/userStats", params=params).json()
-z = x['categoryCount'] #For easy access to the categories
+x = x['categoryCount'] #For easy access to the categories
 
 #Get all data together for writing to CSV
 statData = [datetime.now().strftime("%m/%d/%Y %H:%M:%S"), y['minutesSaved'], y['segmentCount'], y['ignoredSegmentCount'], y['viewCount'], y['ignoredViewCount'], y['warnings'], y['reputation'],
-            z['sponsor'], z['intro'], z['outro'], z['interaction'], z['selfpromo'], z['music_offtopic'], z['preview'], z['poi_highlight'], z['filler'], z['exclusive_access']]
+            x['sponsor'], x['intro'], x['outro'], x['interaction'], x['selfpromo'], x['music_offtopic'], x['preview'], x['poi_highlight'], x['filler'], x['exclusive_access']]
 
 #Check if file exists, if not, create one and write headers
 filePath = (sys.argv[2] + "sponorBlockStats.csv").replace('"', "\\")
