@@ -5,6 +5,16 @@ Misc Python scripts that I've written.
 
 This script is for use with the game: Letter Quest: Grimm's Journey (and the Remastered Edition).  The game is a scrabble-like game and this script will help find word combinations and their scores.  The script listens for the key "F2" to be pressed in order to activate.  First, the script will check if the game is running and if so, grab a screenshot of the location where the letters are stored during play.  It will then crop the image to get each of the individual letters and then run them through Tesseract OCR to determine which letter is in each image.  Once it determines the set of letters that you have, it will search a dictionary file (Scrabble.txt) that contains a list of words that are acceptable for Scrabble and determine what words can be created.  It will score each word and then output each of the possible words and their scores in the console, divided into sections based on the length of the word.  
 
+### sponsorBlockStats.py
+
+This script is for getting your stats for SponsorBlock (https://chrome.google.com/webstore/detail/sponsorblock-for-youtube/mnjggcdmjocbbbhaepdhchncahnbgone?hl=en) using the built in API endpoints.  The script will get information such as the segments you have submitted, the categories those segments belong to, the total amount of time you have saved people and the total amount of views your segments have.  The dat awill be saved to a .csv file in your desired location.  This makes it wasy to create a .bat file and schedule it to run so that you can see your stats over time.
+
+Required arguments:
+- publicUserID: Your SponsorBlock public ID (You can copy yours from the SponorBlock icon under "Your Work", 3rd icon.  It should be a 64 character long string.
+- fileSaveLocation: Where you want to save your file.  For Example: "C:\Users\JoeSmo\Desktop\"
+
+Example running the file: `python "D:\pathToFile\sponsorBlockStats.py" "1234567890abcdefgh" "C:\Users\JoeSmo\Desktop\"`
+
 ### GDQScrape.py
 
 This file is used for scraping donations on the Games Done Quick (GDQ) site for an inputted year and inputted event (Awesome Games Done Quick or Summer Games Done Quick (AGDQ/SGDQ)).  This data is exported as CSV for later use with Pandas or Microsoft Power BI.
