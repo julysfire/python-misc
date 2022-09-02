@@ -47,6 +47,10 @@ Takes a single input of a directory.  The directory will be looped through and a
 
 Takes a single input of the directory to be searched for duplicate files.  The files will be hashed and then checked for uniqueness.  Any duplicate files will be deleted.  Works for all sub folders within the directory given.  Great when paired with EmptyFolderRemove to delete sub directories that are empty.
 
+### steamAchievementStats
+
+This script reaches out to the Steam API to get all achievements for all owned games on your Steam account and inserts the data into a MySQL table to allow easy data analysis.
+
 ## RS Wiki
 
 ### rs-profitableAlchs
