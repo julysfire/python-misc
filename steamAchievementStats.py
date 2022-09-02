@@ -151,10 +151,10 @@ def getAchievementPercentages(tableName, ownedGamesTable):
 
 if __name__ == '__main__':
     #Builds a table of all steam items and their appid.
-    #getAppListDB("steamapps")
+    getAppListDB("steamapps")
 
     #Get a list of all owned games
-    #getOwnedGames("steamownedgames")
+    getOwnedGames("steamownedgames")
 
     #Get a list of all achievements
     getAllAchievements("steamachievements", "steamownedgames")
