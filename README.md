@@ -49,7 +49,7 @@ Takes a single input of the directory to be searched for duplicate files.  The f
 
 ### steamAchievementStats
 
-This script reaches out to the Steam API to get all achievements for all owned games on your Steam account and inserts the data into a MySQL table to allow easy data analysis.
+This script reaches out to the Steam API to get all achievements for all owned games on your Steam account and inserts the data into a MySQL table to allow easy data analysis.  A lot of this fiile uses personal data such as MySQL server connection/logins and private Steam profile ids and API keys so this is more of a cut back version so you can get an idea on how to perform an operation like this.
 
 ## RS Wiki
 
