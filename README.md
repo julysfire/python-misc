@@ -31,13 +31,13 @@ Scrapes jobs on Indeed based on an entered serach term and location.  Prints the
 
 Scraper for college football standings and stats for a given season.  Works for all 4 divisions at https://www.espn.com/college-football/standings/_/ . Outputs in a CSV for later data analysis for for importing into Pandas in a different script.
 
-### helpful
-
-Some helpful stuff I found on Reddit that I have to reach through.
-
 ### sportsReferenceScrape.py
 
 Similar to the ESPN scraper, scrapes Sports Reference for stats over time and outputs to a CSV file.
+
+### helpful
+
+Some helpful stuff I found on Reddit that I have to reach through.
 
 ### EmptyFolderRemove.py
 
@@ -50,6 +50,10 @@ Takes a single input of the directory to be searched for duplicate files.  The f
 ### steamAchievementStats
 
 This script reaches out to the Steam API to get all achievements for all owned games on your Steam account and inserts the data into a MySQL table to allow easy data analysis.  A lot of this fiile uses personal data such as MySQL server connection/logins and private Steam profile ids and API keys so this is more of a cut back version so you can get an idea on how to perform an operation like this.
+
+###CryptoPriceNotify.py
+
+This script reaches out to the coinbase API to get the exchange rates for BTC, BAT and DOGE in USD and then displays a toast for the percent change over time from when the script started.  This will run ever hour on the hour and give at toast then with a percent change from the previous hour.
 
 ## RS Wiki
 
