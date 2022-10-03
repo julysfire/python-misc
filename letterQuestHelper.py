@@ -5,7 +5,7 @@ import pygetwindow
 from pytesseract import pytesseract
 import pathlib
 
-fullPath = str(pathlib.Path(__file__).parent.resolve())
+fullPath = str(pathlib.Path(__file__).parent.resolve()) + "\\"
 charsFromText = []
 
 #Get dictionary of words
