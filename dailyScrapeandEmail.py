@@ -7,10 +7,10 @@ import smtplib
 from email.mime.text import MIMEText
 
 # Setup MYSQL
-MYSQL_HOST = "localhost"
-MYSQL_USER = ""
-MYSQL_PASSWORD = ""
-MYSQL_DATABASE_NAME = ""
+MYSQL_HOST = "localhost"        #Localhost if it is your own computer, else the host address
+MYSQL_USER = ""                 #username
+MYSQL_PASSWORD = ""             #password
+MYSQL_DATABASE_NAME = ""        #Name of database
 
 mydb = mysql.connector.connect(
     host=MYSQL_HOST,
@@ -23,11 +23,11 @@ mycursor = mydb.cursor()
 
 def getData():
     # Setup request to RapidAPI and get response
-    url = ""
-    querystring = {"url": ""}
+    url = ""                       #The Rapid API endpoint, i.e. "https://zillow56.p.rapidapi.com/search_url"
+    querystring = {"url": ""}      #The full query, i.e. go on zillow and get the URL for the area you want to scrape, including filters
     headers = {
-        "X-RapidAPI-Key": "",
-        "X-RapidAPI-Host": ""
+        "X-RapidAPI-Key": "",        #Your key
+        "X-RapidAPI-Host": ""        #The host, i.e. "zillow56.p.rapidapi.com"
     }
 
     response = requests.request("GET", url, headers=headers, params=querystring)
@@ -35,6 +35,10 @@ def getData():
 
 
     for i in responseJson["results"]:
+
+        #The following SQL, vals and code might look different depending on how you set up your table.
+        #Please see the rapid API page on what values will be returned with the API call.
+        #That will determine how you want to set up your table.
         sql = "INSERT INTO properties (bathrooms, bedrooms, city, country, currency, datePriceChanged, daysOnZillow, homeStatus, homeStatusForHDP, homeType, isFeatured, isNonOwnerOccupied, isPreforeclosureAuction, isPremierBuilder, isUnmappable, isZillowOwned, latitude, longitude, latLongCombined, is_newHome, is_FSBA, livingArea, lotAreaUnit, lotAreaValue, newConstructionType, price, priceChange, percentChange, priceForHDP, priceReduction, rentZestimate, shouldHighlight, state, streetAddress, taxAssessedValue, zestimate, zipcode, zpid, url, fullAddress, snapshotDate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         vals = ["bathrooms", "bedrooms", "city", "country", "currency", "datePriceChanged", "daysOnZillow", "homeStatus", "homeStatusForHDP", "homeType", "isFeatured", "isNonOwnerOccupied", "isPreforeclosureAuction", "isPremierBuilder", "isUnmappable", "isZillowOwned", "latitude", "longitude", "latLongCombined", "is_newHome", "is_FSBA", "livingArea", "lotAreaUnit", "lotAreaValue", "newConstructionType", "price", "priceChange", "percentChange", "priceForHDP", "priceReduction", "rentZestimate", "shouldHighlight", "state", "streetAddress", "taxAssessedValue", "zestimate", "zipcode", "zpid", "url", "fullAddress", "snapshotDate"]
         z = []
@@ -82,9 +86,13 @@ def getData():
     print("Records inserted.")
 
 def analysisReport():
+    
+    #This is just my own analysis, feel free to write your own queries 
+    #Basics: Excecute SQL, add headers/footers and results of query to the analysisReportData variable
+    
     analysisReportData = " ----- ANALYSIS FOR " + str(date.today()) + " -----\n---Percent with Reductions---\nDate                Percent\n"
     #Percent of homes with price decreases
-    SQL = "select p.snapshotDate, (rc.totalCount / dx.totalCount) * 100 as percentReduced from zillow_data.properties p left join (select count(*) as totalCount, snapshotDate from zillow_data.properties group by snapshotDate) dx on dx.snapshotDate = p.snapshotDate left join (select count(*) as totalCount, snapshotDate from zillow_data.properties where datePriceChanged is not null group by snapshotDate) rc on rc.snapshotDate = p.snapshotDate group by p.snapshotDate order by 1;"
+    SQL = "select p.snapshotDate, (rc.totalCount / dx.totalCount) * 100 as percentReduced from zillow_data.properties p left join (select count(*) as totalCount, snapshotDate from zillow_data.properties group by snapshotDate) dx on dx.snapshotDate = p.snapshotDate left join (select count(*) as totalCount, snapshotDate from zillow_data.properties where datePriceChanged is not null group by snapshotDate) rc on rc.snapshotDate = p.snapshotDate where p.snapshotDate > DATE_SUB(CURDATE(), INTERVAL 10 DAY) group by p.snapshotDate order by 1;"
     mycursor.execute(SQL)
 
     myresults = mycursor.fetchall()
@@ -93,7 +101,7 @@ def analysisReport():
 
     #New Price Drops
     analysisReportData = analysisReportData + "\n\n--- New Price Drops ---\nAddress                                     URL                                           Price         Price Change     Percent Change          Bedrooms          Living Area\n"
-    SQL = "select p.fullAddress, p.url, p.price, p.priceChange, p.percentChange, p.bedrooms, p.livingArea from zillow_data.properties p left join (select latLongCombined, price from zillow_data.properties where snapshotDate = CURDATE() -1) pd on pd.latLongCombined = p.latLongCombined where snapshotDate = CURDATE() and pd.price > p.price;"
+    SQL = "select p.fullAddress, p.url, p.price, p.priceChange, p.percentChange, p.bedrooms, p.livingArea  from zillow_data.properties p left join (select latLongCombined, price from zillow_data.properties where snapshotDate = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) pd on pd.latLongCombined = p.latLongCombined where snapshotDate = CURDATE() and pd.price > p.price and p.fullAddress not in ('Cypress Plan, Cape Coral Premier Cape Coral, FL 33991', 'Dolcetto 2-Car Plan, Cape Coral Premier Cape Coral, FL 33991', 'Magnolia Plan, Cape Coral Premier Cape Coral, FL 33991', 'Dolcetto 3 Car Plan, Cape Coral Premier Cape Coral, FL 33991');"
     mycursor.execute(SQL)
 
     myresults = mycursor.fetchall()
@@ -102,7 +110,7 @@ def analysisReport():
 
     #New Listings
     analysisReportData = analysisReportData + "\n\n--- New Listings Today ---\nAddress                                                           URL                                                                 Price        Bedrooms  Bathrooms   Living Area (sqft)          Lat, Long                               Is New Home?          Lot Area        Lot Area Units\n"
-    SQL = "select p.fullAddress, p.url, p.price, p.bedrooms, p.bathrooms, p.livingArea, p.latLongCombined, p.is_newHome, p.lotAreaValue, p.lotAreaUnit from zillow_data.properties p where p.latLongCombined not in (select distinct latLongCombined from zillow_data.properties where snapshotDate = CURDATE() -1) and snapshotDate = CURDATE();"
+    SQL = "select p.fullAddress, p.url, p.price, p.bedrooms, p.bathrooms, p.livingArea, p.latLongCombined, p.is_newHome, p.lotAreaValue, p.lotAreaUnit from zillow_data.properties p where p.latLongCombined not in (select distinct latLongCombined from zillow_data.properties where snapshotDate = CURDATE() -1) and snapshotDate = CURDATE() and p.fullAddress not in ('Cypress Plan, Cape Coral Premier Cape Coral, FL 33991', 'Dolcetto 2-Car Plan, Cape Coral Premier Cape Coral, FL 33991', 'Magnolia Plan, Cape Coral Premier Cape Coral, FL 33991', 'Dolcetto 3 Car Plan, Cape Coral Premier Cape Coral, FL 33991');"
     mycursor.execute(SQL)
 
     myresults = mycursor.fetchall()
@@ -111,7 +119,7 @@ def analysisReport():
 
     #Delistings
     analysisReportData = analysisReportData + "\n\n--- Delistings Today ---\nAddress                                                             URL                                                                 Price        Bedrooms  Bathrooms   Living Area (sqft)          Lat, Long                               Is New Home?          Lot Area        Lot Area Units\n"
-    SQL = "select p.fullAddress, p.url, p.price, p.bedrooms, p.bathrooms, p.livingArea, p.latLongCombined, p.is_newHome, p.lotAreaValue, p.lotAreaUnit from zillow_data.properties p where p.latLongCombined not in (select distinct latLongCombined from zillow_data.properties where snapshotDate = CURDATE()) and snapshotDate = CURDATE() -1;"
+    SQL = "select p.fullAddress, p.url, p.price, p.bedrooms, p.bathrooms, p.livingArea, p.latLongCombined, p.is_newHome, p.lotAreaValue, p.lotAreaUnit from zillow_data.properties p  where p.latLongCombined not in (select distinct latLongCombined from zillow_data.properties where snapshotDate = CURDATE()) and snapshotDate = DATE_SUB(CURDATE(), INTERVAL 1 DAY) and p.fullAddress not in ('Cypress Plan, Cape Coral Premier Cape Coral, FL 33991', 'Dolcetto 2-Car Plan, Cape Coral Premier Cape Coral, FL 33991', 'Magnolia Plan, Cape Coral Premier Cape Coral, FL 33991', 'Dolcetto 3 Car Plan, Cape Coral Premier Cape Coral, FL 33991');"
     mycursor.execute(SQL)
 
     myresults = mycursor.fetchall()
@@ -120,7 +128,7 @@ def analysisReport():
 
     #Average Price Per Bedroom
     analysisReportData = analysisReportData + "\n\n--- Average Price By Bedroom ---\nDate           Bedrooms        Average Price\n"
-    SQL = "select snapshotDate, bedrooms, avg(price) from zillow_data.properties group by snapshotDate, bedrooms order by 1;"
+    SQL = "select snapshotDate, bedrooms, avg(price) from zillow_data.properties where snapshotDate > DATE_SUB(CURDATE(), INTERVAL 10 DAY) GROUP by snapshotDate, bedrooms order by 2,1;"
     mycursor.execute(SQL)
 
     myresults = mycursor.fetchall()
@@ -129,26 +137,43 @@ def analysisReport():
 
     #Price Per Sqft By Date
     analysisReportData = analysisReportData + "\n\n--- Price Per sqft By Date ---\nDate                  Price Per Sqft\n"
-    SQL = "select p.snapshotDate, avg(p.price / p.livingArea) as pricePerSqFt from zillow_data.properties p group by snapshotDate order by 1;"
+    SQL = "select p.snapshotDate, avg(p.price / p.livingArea) as pricePerSqFt from zillow_data.properties p where snapshotDate > DATE_SUB(CURDATE(), INTERVAL 10 DAY) group by snapshotDate order by 1;"
     mycursor.execute(SQL)
 
     myresults = mycursor.fetchall()
     for i in myresults:
         analysisReportData = analysisReportData + str(i[0]) + "         " + str(i[1]) + "\n"
 
+    #Average days on zillow
+    analysisReportData = analysisReportData + "\n\n--- Average Days On Zillow ---\nDate                  # Of Days\n"
+
+        #Insert date first
+    SQL = "insert into zillow_data.time_to_sell (snapshotdate, average_days_on_zillow) select curdate() as snapshotdate, avg(datediff) from (select datediff(max(snapshotDate), min(snapshotDate)) as datediff from zillow_data.properties where snapshotdate <= curdate() group by fullAddress having datediff(max(snapshotDate), min(snapshotDate)) > 0) x;"
+    mycursor.execute(SQL)
+    mydb.commit()
+
+    SQL = "select snapshotdate, average_days_on_zillow from zillow_data.time_to_sell where snapshotDate > DATE_SUB(CURDATE(), INTERVAL 10 DAY) order by 1;"
+    mycursor.execute(SQL)
+
+    myresults = mycursor.fetchall()
+    for i in myresults:
+        analysisReportData = analysisReportData + str(i[0]) + "         " + str(i[1]) + "\n"
+
+    #Print is optional, I want to see it in the console so I leave this in
     print(analysisReportData)
     return analysisReportData
 
 def sendEmail(reportData):
-    sender = ""
-    receiver = ""
+    sender = ""                         #I had a ton of trouble sending emails from self hosted smtp, I found the only way for Comcast to let me emails through was sending it through their smtp server.
+                                        #So for me, the sender email is my @comcast.net email
+    receiver = ""                       #Email that the message will be sent to
     message = MIMEText(reportData)
     message['Subject'] = 'Daily Report for ' + str(date.today())
     message['From'] = sender
     message['To'] = receiver
 
-    server = smtplib.SMTP_SSL('smtp.comcast.net', port=465)
-    server.login(sender, "")
+    server = smtplib.SMTP_SSL('smtp.comcast.net', port=465)            #Just like above, I have Comcast so this is their smtp server
+    server.login(sender, "")                                           #Your Comcast account password
     server.sendmail(sender, receiver, message.as_string())
     server.quit()
     print("Email sent")
